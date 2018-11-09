@@ -35,7 +35,8 @@ void print(parentNode* node)
 int main()
 {
     Tree tree;
-    vector<ElemType> vec; vector<vector<int>> table;
+    vector<ElemType> vec;// = {{"a"}, {"b"}, {"c"}, {"d"}, {"e"}, {"f"}, {"g"}, {"h"}, {"i"}, {"j"}};
+    vector<vector<int>> table;// = {{1,2,3}, {}, {4, 6}, {5}, {7}, {9}, {}, {8}, {}, {}};
     init(vec, table);
     TreeInit(tree, vec, table);
     preorderTraverse(tree, print);

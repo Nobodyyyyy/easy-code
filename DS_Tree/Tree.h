@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <queue>
 using namespace std;
 
 struct ElemType
@@ -51,7 +52,8 @@ void TreeInit(Tree& tree, vector<ElemType>& vec, vector<vector<int>>& table)
 void preorderTraverse(Tree& t, void(*visit)(parentNode* n))
 {
     cout << "非递归方式先序遍历结果:" << endl;
-    stack<parentNode*> s;
+    //辅助栈s_help 使子节点输出顺序反向
+    stack<parentNode*> s, s_help;
     s.push(t.nodes[0]);
     parentNode *pnode;
     childNode *cnode;
@@ -62,8 +64,14 @@ void preorderTraverse(Tree& t, void(*visit)(parentNode* n))
         visit(pnode);
         cnode = pnode->fir;
         while(cnode){
-            s.push(t.nodes[cnode->pos]);
+            s_help.push(t.nodes[cnode->pos]);
+
             cnode = cnode->next;
+        }
+        while(!s_help.empty())
+        {
+            s.push(s_help.top());
+            s_help.pop();
         }
     }
 }
@@ -90,25 +98,25 @@ void preorderTraverse_(Tree& t, void(*visit)(parentNode* n))
 void postorderTraverse(Tree& t, void(*visit)(parentNode* n))
 {
     cout << "非递归方式后序遍历结果:" << endl;
-    stack<parentNode*> s;
+    stack<parentNode*> s, s_help;
     s.push(t.nodes[0]);
     parentNode *pnode;
     childNode *cnode;
-    while(int(s.size()) <= t.nodenum)
+    while(!s.empty())
     {
         pnode = s.top();
+        s.pop();
+        s_help.push(pnode);
         cnode = pnode->fir;
         while(cnode){
             s.push(t.nodes[cnode->pos]);
             cnode = cnode->next;
         }
     }
-
-    while(!s.empty())
+    while(!s_help.empty())
     {
-        pnode = s.top();
-        s.pop();
-        visit(pnode);
+        visit(s_help.top());
+        s_help.pop();
     }
 }
 
@@ -119,7 +127,7 @@ void postorderTraverse_help(Tree& t, parentNode* pnode, void(*visit)(parentNode*
     childNode *cnode = pnode->fir;
     while(cnode)
     {
-        preorderTraverse_help(t, t.nodes[cnode->pos], visit);
+        postorderTraverse_help(t, t.nodes[cnode->pos], visit);
         cnode = cnode->next;
     }
     visit(pnode);
