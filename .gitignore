@@ -1,3 +1,6 @@
 *.exe
 *.layout
 *.depend
+*/bin
+*/obj
+*/*.layout
